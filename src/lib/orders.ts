@@ -35,6 +35,21 @@ export async function getOrders(query: IOrdersQuery): Promise<IPaginated<IOrderL
   return response.json();
 }
 
+// Cached (ISR) for the dashboard; invalidated by updateTag("orders") after a status change.
+export async function getRecentOrders(limit = 5): Promise<IOrderListItem[]> {
+  const response = await fetch(`${API_URL}/api/orders?sort=-createdAt&page=1&limit=${limit}`, {
+    headers: authHeaders(),
+    next: { revalidate: 30, tags: ["orders"] },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch recent orders: ${response.status}`);
+  }
+
+  const payload = (await response.json()) as IPaginated<IOrderListItem>;
+  return payload.data;
+}
+
 export async function getTransitions(): Promise<TransitionsMap> {
   const response = await fetch(`${API_URL}/api/transitions`, {
     headers: authHeaders(),

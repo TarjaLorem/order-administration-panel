@@ -6,7 +6,7 @@ import { patchOrderStatus } from "@/lib/orders";
 import { ORDER_STATUSES, type ActionResult, type OrderStatus } from "@/types/models";
 
 export async function updateOrderStatus(id: unknown, status: unknown): Promise<ActionResult> {
-  // Server Action is a public POST endpoint — validate input.
+
   if (typeof id !== "string" || !/^\d+$/.test(id)) {
     return { ok: false, error: "Invalid order id" };
   }
