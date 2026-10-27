@@ -2,30 +2,33 @@
 
 import { updateTag } from "next/cache";
 
-import { patchOrderStatus } from "@/lib/orders";
-import { ORDER_STATUSES, type ActionResult, type OrderStatus } from "@/types/models";
+import { callApi, fail } from "@/lib/api-errors";
+import { patchOrderStatus, postOrderNote } from "@/lib/orders";
+import { isNoteText, isOrderId, isOrderStatus, NOTE_MAX_LENGTH } from "@/lib/validation";
+import type { ActionResult } from "@/types/models";
+
 
 export async function updateOrderStatus(id: unknown, status: unknown): Promise<ActionResult> {
+  if (!isOrderId(id)) return fail("Invalid order id.");
+  if (!isOrderStatus(status)) return fail("Invalid status.");
 
-  if (typeof id !== "string" || !/^\d+$/.test(id)) {
-    return { ok: false, error: "Invalid order id" };
+  const result = await callApi(() => patchOrderStatus(id, status));
+
+  if (result.ok) {
+    updateTag("orders");
+    updateTag(`order-${id}`);
   }
-  if (typeof status !== "string" || !ORDER_STATUSES.includes(status as OrderStatus)) {
-    return { ok: false, error: "Invalid status" };
+  return result;
+}
+
+export async function addOrderNote(id: unknown, text: unknown): Promise<ActionResult> {
+  if (!isOrderId(id)) return fail("Invalid order id.");
+  if (!isNoteText(text)) return fail(`Note must be 1–${NOTE_MAX_LENGTH} characters.`);
+
+  const result = await callApi(() => postOrderNote(id, text.trim()));
+
+  if (result.ok) {
+    updateTag(`order-${id}`);
   }
-
-  try {
-    const response = await patchOrderStatus(id, status as OrderStatus);
-
-    if (!response.ok) {
-      const body = (await response.json().catch(() => null)) as { error?: string } | null;
-      return { ok: false, error: body?.error ?? `Request failed (${response.status})` };
-    }
-  } catch {
-    return { ok: false, error: "API is unavailable" };
-  }
-
-  updateTag("orders");
-  updateTag(`order-${id}`);
-  return { ok: true };
+  return result;
 }

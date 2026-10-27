@@ -5,7 +5,6 @@ import { RevenueChart } from "./RevenueChart";
 import { KpiSkeleton, RecentOrdersSkeleton, RevenueChartSkeleton } from "./Skeletons";
 import { KpiCards } from "./StatsBlocks";
 
-// ISR: metrics may lag up to 30s. Status changes call updateTag("orders") → fresh immediately.
 export const revalidate = 30;
 
 export default function DashboardPage() {
@@ -16,7 +15,6 @@ export default function DashboardPage() {
         <p className="text-slate-600">Metrics refresh every 30 seconds</p>
       </header>
 
-      {/* Slow /api/stats (~1.5s) streams in without blocking the rest of the page */}
       <Suspense fallback={<KpiSkeleton />}>
         <KpiCards />
       </Suspense>

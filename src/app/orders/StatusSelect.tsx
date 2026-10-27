@@ -24,9 +24,9 @@ export function StatusSelect({ id, status, transitions }: IStatusSelectProps) {
   const change = (next: OrderStatus) => {
     setError(null);
     startTransition(async () => {
-      setOptimistic(next); // 1. show immediately
-      const result = await updateOrderStatus(id, next); // 2. Server Action
-      if (!result.ok) setError(result.error); // 3. on failure props are old → auto rollback
+      setOptimistic(next);
+      const result = await updateOrderStatus(id, next);
+      if (!result.ok) setError(result.error);
     });
   };
 

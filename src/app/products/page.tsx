@@ -1,3 +1,5 @@
+import { CARD_SURFACE } from "@/components/Card";
+import { formatMoney } from "@/lib/format";
 import { getProducts } from "@/lib/products";
 
 export const dynamic = "force-static";
@@ -22,14 +24,14 @@ export default async function ProductsPage() {
         {products.map((product) => (
           <article
             key={product.id}
-            className="flex min-w-[260px] flex-1 basis-[260px] flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-3.5 shadow-sm"
+            className={`flex min-w-[260px] flex-1 basis-[260px] flex-col gap-3 p-3.5 ${CARD_SURFACE}`}
           >
             <div className="flex items-center justify-between gap-2.5">
               <span className="rounded-full bg-indigo-50 px-2.5 py-1 text-xs font-semibold text-indigo-800">
                 {product.category}
               </span>
 
-              <strong className="text-lg text-slate-900">{product.price.toFixed(2)} UAH</strong>
+              <strong className="text-lg text-slate-900">{formatMoney(product.price, "UAH")}</strong>
             </div>
 
             <div className="flex flex-col gap-1">

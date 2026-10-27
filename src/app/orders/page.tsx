@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { CARD_SURFACE } from "@/components/Card";
+import { formatMoney, formatShortDateTime } from "@/lib/format";
 import { getOrders, getTransitions } from "@/lib/orders";
 import {
   ORDER_STATUSES,
@@ -48,9 +50,6 @@ function buildHref(sp: SearchParams, patch: Record<string, string | undefined>) 
   return qs ? `/orders?${qs}` : "/orders";
 }
 
-const dateFormat = new Intl.DateTimeFormat("uk-UA", { dateStyle: "short", timeStyle: "short" });
-const moneyFormat = new Intl.NumberFormat("uk-UA", { maximumFractionDigits: 2 });
-
 export default async function OrdersPage({ searchParams }: { searchParams: Promise<SearchParams> }) {
   const sp = await searchParams;
   const query = parseQuery(sp);
@@ -82,7 +81,7 @@ export default async function OrdersPage({ searchParams }: { searchParams: Promi
 
       <OrdersToolbar />
 
-      <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm">
+      <div className={`overflow-x-auto ${CARD_SURFACE}`}>
         <table className="w-full text-left text-sm">
           <thead className="border-b border-slate-200 bg-slate-50 text-slate-600">
             <tr>
@@ -105,7 +104,11 @@ export default async function OrdersPage({ searchParams }: { searchParams: Promi
             )}
             {orders.data.map((order) => (
               <tr key={order.id} className="border-b border-slate-100 last:border-0 hover:bg-slate-50">
-                <td className="px-4 py-3 font-medium">{order.id}</td>
+                <td className="px-4 py-3 font-medium">
+                  <Link href={`/orders/${order.id}`} className="text-indigo-600 hover:underline">
+                    {order.id}
+                  </Link>
+                </td>
                 <td className="px-4 py-3">
                   <div className="flex flex-col">
                     <span>{order.customer.name}</span>
@@ -113,14 +116,12 @@ export default async function OrdersPage({ searchParams }: { searchParams: Promi
                   </div>
                 </td>
                 <td className="px-4 py-3">{order.itemsCount}</td>
-                <td className="px-4 py-3 whitespace-nowrap">
-                  {moneyFormat.format(order.total)} {order.currency}
-                </td>
+                <td className="px-4 py-3 whitespace-nowrap">{formatMoney(order.total, order.currency)}</td>
                 <td className="px-4 py-3">
                   <StatusSelect id={order.id} status={order.status} transitions={transitions} />
                 </td>
-                <td className="px-4 py-3 whitespace-nowrap text-slate-600">{dateFormat.format(new Date(order.createdAt))}</td>
-                <td className="px-4 py-3 whitespace-nowrap text-slate-600">{dateFormat.format(new Date(order.updatedAt))}</td>
+                <td className="px-4 py-3 whitespace-nowrap text-slate-600">{formatShortDateTime(order.createdAt)}</td>
+                <td className="px-4 py-3 whitespace-nowrap text-slate-600">{formatShortDateTime(order.updatedAt)}</td>
               </tr>
             ))}
           </tbody>

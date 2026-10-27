@@ -1,5 +1,7 @@
 import type { CSSProperties, ReactNode } from "react";
 
+import { CARD_SURFACE } from "@/components/Card";
+
 const CHART_BAR_HEIGHTS = [35, 20, 55, 45, 30, 65, 80, 60, 75, 85, 25, 70, 90, 88];
 
 function Bone({ className = "", style }: { className?: string; style?: CSSProperties }) {
@@ -10,7 +12,7 @@ function Card({ className = "", children }: { className?: string; children: Reac
   return (
     <div
       aria-hidden
-      className={`flex animate-pulse flex-col rounded-2xl border border-slate-200 bg-white p-5 shadow-sm ${className}`}
+      className={`flex animate-pulse flex-col p-5 ${CARD_SURFACE} ${className}`}
     >
       {children}
     </div>

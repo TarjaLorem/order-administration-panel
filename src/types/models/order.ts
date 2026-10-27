@@ -32,14 +32,14 @@ export interface IOrderNote {
 }
 
 export interface IOrder {
-  id: number;
+  id: string;
   customer: ICustomer;
   items: IOrderItem[];
   total: number;
   currency: string;
   status: OrderStatus;
   createdAt: string;
-  updatedAt: string; // ISO
+  updatedAt: string;
   history: IOrderHistoryEntry[];
   notes: IOrderNote[];
 }
@@ -67,4 +67,34 @@ export interface IStatusSelectProps {
   id: string;
   status: OrderStatus;
   transitions: TransitionsMap;
+}
+
+export interface IOrderNotesProps {
+  orderId: string;
+  notes: IOrderNote[];
+}
+
+export interface IOrderHeaderProps {
+  order: IOrder;
+  transitions: TransitionsMap;
+}
+
+export interface IOrderItemsProps {
+  items: IOrderItem[];
+  total: number;
+  currency: string;
+}
+
+export interface ICustomerCardProps {
+  customer: ICustomer;
+}
+
+export interface IStatusHistoryProps {
+  history: IOrderHistoryEntry[];
+}
+
+export interface IStatusConflict {
+  error: string;
+  current?: OrderStatus;
+  allowed?: OrderStatus[];
 }

@@ -3,6 +3,7 @@
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
 
+import { CARD_SURFACE } from "@/components/Card";
 import { ORDER_STATUSES, type OrderStatus } from "@/types/models";
 
 export function OrdersToolbar() {
@@ -15,7 +16,6 @@ export function OrdersToolbar() {
   const [q, setQ] = useState(urlQuery);
   const [prevUrlQuery, setPrevUrlQuery] = useState(urlQuery);
 
-  // Keep input in sync with URL (back/forward navigation).
   if (urlQuery !== prevUrlQuery) {
     setPrevUrlQuery(urlQuery);
     setQ(urlQuery);
@@ -29,13 +29,12 @@ export function OrdersToolbar() {
       if (value) params.set(key, value);
       else params.delete(key);
     }
-    params.delete("page"); // any filter change resets pagination
+    params.delete("page");
     const qs = params.toString();
     const href = qs ? `${pathname}?${qs}` : pathname;
     startTransition(() => (mode === "push" ? router.push(href) : router.replace(href)));
   };
 
-  // Debounced search → URL.
   useEffect(() => {
     if (q.trim() === urlQuery) return;
     const timer = setTimeout(() => navigate({ q: q.trim() || undefined }, "replace"), 350);
@@ -49,7 +48,9 @@ export function OrdersToolbar() {
   };
 
   return (
-    <div className="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm md:flex-row md:items-center md:justify-between">
+    <div
+      className={`flex flex-col gap-3 p-4 md:flex-row md:items-center md:justify-between ${CARD_SURFACE}`}
+    >
       <div className="flex flex-wrap gap-2">
         {ORDER_STATUSES.map((status) => {
           const active = selected.includes(status);
