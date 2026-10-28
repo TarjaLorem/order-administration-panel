@@ -1,36 +1,80 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Order Administration Panel
 
-## Getting Started
+Next.js 16 · TypeScript · Tailwind. `npm run dev` → `/dashboard`.
 
-First, run the development server:
+## Component trees
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+`[S]` server, `[C]` client. Client only where browser state is needed.
+
+```
+/dashboard
+DashboardPage [S]
+├─ Suspense › KpiCards [S]
+├─ Suspense › RevenueChart [S]
+└─ Suspense › RecentOrders [S]
+```
+Read-only, so there's no client JS. Separate Suspense blocks keep the slow `/stats` from blocking the rest.
+
+```
+/orders
+OrdersPage [S]
+├─ OrdersToolbar [C]        search/filter input → URL
+├─ OrdersTable [S]
+│  ├─ SortHeader [S]        <Link>
+│  └─ StatusSelect [C]      useOptimistic
+└─ Pagination [S]           <Link>
+@modal/(.)[id]
+└─ OrderModal [C]           <dialog>, router.back()
+   └─ OrderDetails [S]
+```
+State lives in the URL, so the server renders the table. Only typing, optimistic status and the dialog run on the client.
+
+```
+/orders/[id]
+OrderPage [S]
+└─ OrderDetails [S]
+   ├─ OrderHeader [S] › StatusSelect [C]
+   ├─ OrderItems [S]
+   ├─ OrderNotes [C]        optimistic list + form share state
+   ├─ CustomerCard [S]
+   └─ StatusHistory [S]
+error.tsx [C]               required by Next
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Rendering
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Page | Mode | Invalidation | Why |
+|---|---|---|---|
+| `/products` | Static | build only | not edited here |
+| `/dashboard` | ISR 30s | time + `updateTag("orders")` | slightly stale is OK, own edits show instantly |
+| `/orders` | Dynamic | per request + `updateTag("orders")` | depends on searchParams |
+| `/orders/[id]` | SSG ×20 + on demand | `updateTag("order-${id}")` | changes only via this panel's actions |
+| modal | Dynamic | same tag as details | interception is per navigation |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Cache tags
 
-## Learn More
+```
+updateOrderStatus → "orders"      → getOrders, getRecentOrders, getStats
+                  → "order-${id}" → getOrder
+addOrderNote      → "order-${id}" → getOrder
+untagged (force-cache): getTransitions, getProducts
+```
 
-To learn more about Next.js, take a look at the following resources:
+## next build
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+┌ ○ /_not-found
+├ ○ /dashboard          30s
+├ ƒ /orders
+├ ƒ /orders/(.)[id]
+├   /orders/[id]
+│ ├ ● /orders/1150 … [+19 more]
+└ ○ /products
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## FAIL_RATE=1
 
-## Deploy on Vercel
+The API returns 500 → *"Server error — changes were not saved."*
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Status:** the badge switches instantly, rolls back to the real status, and a red error appears under it.
+- **Note:** the note appears faded ("Saving…"), then disappears. The text goes back into the textarea and a red alert appears under the form.
