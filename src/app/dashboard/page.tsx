@@ -1,9 +1,9 @@
 import { Suspense } from "react";
 
-import { RecentOrders } from "./RecentOrders";
-import { RevenueChart } from "./RevenueChart";
-import { KpiSkeleton, RecentOrdersSkeleton, RevenueChartSkeleton } from "./Skeletons";
-import { KpiCards } from "./StatsBlocks";
+import { RecentOrders } from "./_components/RecentOrders";
+import { RevenueChart } from "./_components/RevenueChart";
+import { KpiSkeleton, RecentOrdersSkeleton, RevenueChartSkeleton } from "./_components/Skeletons";
+import { KpiCards } from "./_components/StatsBlocks";
 
 export const revalidate = 30;
 

@@ -1,7 +1,6 @@
+import { StatusSelect } from "@/app/orders/_components/StatusSelect";
 import { formatDateTime } from "@/lib/format";
-import type { IOrderHeaderProps } from "@/types/models";
-
-import { StatusSelect } from "../StatusSelect";
+import type { IOrderHeaderProps } from "@/types/props";
 
 export function OrderHeader({ order, transitions }: IOrderHeaderProps) {
   return (

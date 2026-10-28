@@ -1,5 +1,5 @@
 import { Card } from "@/components/Card";
-import type { ICustomerCardProps } from "@/types/models";
+import type { ICustomerCardProps } from "@/types/props";
 
 export function CustomerCard({ customer }: ICustomerCardProps) {
   return (

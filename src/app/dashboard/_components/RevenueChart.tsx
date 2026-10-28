@@ -1,6 +1,6 @@
 import { Card } from "@/components/Card";
 import { formatDayMonth, formatMoney, formatNumber } from "@/lib/format";
-import { getStats } from "@/lib/stats";
+import { getStats } from "@/lib/api/stats";
 
 export async function RevenueChart() {
   const { revenueByDay, currency } = await getStats();

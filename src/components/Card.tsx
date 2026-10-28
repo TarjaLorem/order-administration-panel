@@ -1,4 +1,4 @@
-import type { ICardProps } from "@/types/models";
+import type { ICardProps } from "@/types/props";
 
 export const CARD_SURFACE = "rounded-2xl border border-slate-200 bg-white shadow-sm";
 

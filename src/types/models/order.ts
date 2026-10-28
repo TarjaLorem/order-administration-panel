@@ -63,36 +63,6 @@ export interface IOrdersQuery {
   limit: number;
 }
 
-export interface IStatusSelectProps {
-  id: string;
-  status: OrderStatus;
-  transitions: TransitionsMap;
-}
-
-export interface IOrderNotesProps {
-  orderId: string;
-  notes: IOrderNote[];
-}
-
-export interface IOrderHeaderProps {
-  order: IOrder;
-  transitions: TransitionsMap;
-}
-
-export interface IOrderItemsProps {
-  items: IOrderItem[];
-  total: number;
-  currency: string;
-}
-
-export interface ICustomerCardProps {
-  customer: ICustomer;
-}
-
-export interface IStatusHistoryProps {
-  history: IOrderHistoryEntry[];
-}
-
 export interface IStatusConflict {
   error: string;
   current?: OrderStatus;

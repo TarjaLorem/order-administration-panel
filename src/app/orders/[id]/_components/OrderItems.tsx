@@ -1,6 +1,6 @@
 import { Card } from "@/components/Card";
 import { formatMoney } from "@/lib/format";
-import type { IOrderItemsProps } from "@/types/models";
+import type { IOrderItemsProps } from "@/types/props";
 
 export function OrderItems({ items, total, currency }: IOrderItemsProps) {
   return (

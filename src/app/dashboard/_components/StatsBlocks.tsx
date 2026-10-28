@@ -1,6 +1,6 @@
 import { Card } from "@/components/Card";
 import { formatMoney, formatNumber, formatTime } from "@/lib/format";
-import { getStats } from "@/lib/stats";
+import { getStats } from "@/lib/api/stats";
 import { ORDER_STATUSES, type OrderStatus } from "@/types/models";
 
 const STATUS_COLORS: Record<OrderStatus, string> = {

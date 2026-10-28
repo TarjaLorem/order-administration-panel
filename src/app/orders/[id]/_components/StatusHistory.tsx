@@ -1,6 +1,6 @@
 import { Card } from "@/components/Card";
 import { formatDateTime } from "@/lib/format";
-import type { IStatusHistoryProps } from "@/types/models";
+import type { IStatusHistoryProps } from "@/types/props";
 
 export function StatusHistory({ history }: IStatusHistoryProps) {
   return (

@@ -2,8 +2,8 @@
 
 import { updateTag } from "next/cache";
 
-import { callApi, fail } from "@/lib/api-errors";
-import { patchOrderStatus, postOrderNote } from "@/lib/orders";
+import { callApi, fail } from "@/lib/api/errors";
+import { patchOrderStatus, postOrderNote } from "@/lib/api/orders";
 import { isNoteText, isOrderId, isOrderStatus, NOTE_MAX_LENGTH } from "@/lib/validation";
 import type { ActionResult } from "@/types/models";
 

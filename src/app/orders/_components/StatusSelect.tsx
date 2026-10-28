@@ -2,9 +2,9 @@
 
 import { useOptimistic, useState, useTransition } from "react";
 
-import type { IStatusSelectProps, OrderStatus } from "@/types/models";
-
-import { updateOrderStatus } from "./actions";
+import { updateOrderStatus } from "@/app/orders/actions";
+import type { OrderStatus } from "@/types/models";
+import type { IStatusSelectProps } from "@/types/props";
 
 const STATUS_STYLES: Record<OrderStatus, string> = {
   pending: "bg-amber-50 text-amber-800 border-amber-200",

@@ -1,7 +1,8 @@
-import { Card } from "@/components/Card";
-import { formatMoney, formatShortDateTime } from "@/lib/format";
-import { getRecentOrders } from "@/lib/orders";
 import Link from "next/link";
+
+import { Card } from "@/components/Card";
+import { getRecentOrders } from "@/lib/api/orders";
+import { formatMoney, formatShortDateTime } from "@/lib/format";
 
 const viewAll = (
   <Link href="/orders" className="text-sm text-indigo-600 hover:underline">

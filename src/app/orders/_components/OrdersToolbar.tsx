@@ -1,14 +1,15 @@
 "use client";
 
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
 
 import { CARD_SURFACE } from "@/components/Card";
-import { ORDER_STATUSES, type OrderStatus } from "@/types/models";
+import { ORDER_STATUSES, type OrderStatus, type ParamsPatch } from "@/types/models";
+
+import { ordersHref } from "../search-params";
 
 export function OrdersToolbar() {
   const router = useRouter();
-  const pathname = usePathname();
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
 
@@ -23,15 +24,8 @@ export function OrdersToolbar() {
 
   const selected = (searchParams.get("status") ?? "").split(",").filter(Boolean) as OrderStatus[];
 
-  const navigate = (patch: Record<string, string | undefined>, mode: "push" | "replace" = "push") => {
-    const params = new URLSearchParams(searchParams.toString());
-    for (const [key, value] of Object.entries(patch)) {
-      if (value) params.set(key, value);
-      else params.delete(key);
-    }
-    params.delete("page");
-    const qs = params.toString();
-    const href = qs ? `${pathname}?${qs}` : pathname;
+  const navigate = (patch: ParamsPatch, mode: "push" | "replace" = "push") => {
+    const href = ordersHref(new URLSearchParams(searchParams.toString()), { ...patch, page: undefined });
     startTransition(() => (mode === "push" ? router.push(href) : router.replace(href)));
   };
 

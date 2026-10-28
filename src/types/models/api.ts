@@ -9,3 +9,5 @@ export interface IPaginated<T> {
 export type ActionResult = { ok: true } | { ok: false; error: string };
 
 export type SearchParams = Record<string, string | string[] | undefined>;
+
+export type ParamsPatch = Record<string, string | undefined>;

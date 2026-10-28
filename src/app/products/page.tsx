@@ -1,6 +1,6 @@
 import { CARD_SURFACE } from "@/components/Card";
 import { formatMoney } from "@/lib/format";
-import { getProducts } from "@/lib/products";
+import { getProducts } from "@/lib/api/products";
 
 export const dynamic = "force-static";
 

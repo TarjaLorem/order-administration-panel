@@ -2,11 +2,11 @@
 
 import { useOptimistic, useState, useTransition } from "react";
 
+import { addOrderNote } from "@/app/orders/actions";
 import { Card } from "@/components/Card";
 import { formatDateTime } from "@/lib/format";
-import type { IOrderNote, IOrderNotesProps } from "@/types/models";
-
-import { addOrderNote } from "../actions";
+import type { IOrderNote } from "@/types/models";
+import type { IOrderNotesProps } from "@/types/props";
 
 const MAX_LENGTH = 500;
 
