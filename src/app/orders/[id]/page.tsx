@@ -7,8 +7,12 @@ import { OrderDetails } from "./_components/OrderDetails";
 const PRERENDER_COUNT = 20;
 
 export async function generateStaticParams() {
-  const { data } = await getOrders({ status: [], q: "", sort: "-createdAt", page: 1, limit: PRERENDER_COUNT });
-  return data.map(({ id }) => ({ id }));
+  try {
+    const { data } = await getOrders({ status: [], q: "", sort: "-createdAt", page: 1, limit: PRERENDER_COUNT });
+    return data.map(({ id }) => ({ id }));
+  } catch {
+    return [];
+  }
 }
 
 export default async function OrderPage({ params }: PageProps<"/orders/[id]">) {
